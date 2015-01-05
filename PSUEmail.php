@@ -6,7 +6,6 @@
 * @author Austin Kelleher, a@alk.im
 */
 class PSUEmail {
-
 	const LDAP_URL = "http://www.work.psu.edu/cgi-bin/ldap/ldap_query.cgi";
 	private $emails = array();
 	private $names = array();
@@ -19,24 +18,25 @@ class PSUEmail {
 			$fields_string = null;
 
 			$fields = array(
-				'sn' => urlencode(""),
-				'cn' => urlencode($name),
-				'uid' => urlencode(""),
-				'mail' => urlencode(""),
-				'full' => urlencode("0"),
-				'submit' => urlencode("Search"));
+				'sn' => "",
+				'cn' => $name,
+				'uid' => "",
+				'mail' => "",
+				'full' => "0",
+				'submit' => "Search"
+			);
 
 			foreach($fields as $key=>$value) { 
-				$fields_string .= $key.'='.$value.'&'; 
+				$fields_string .= $key.'='.urlencode($value).'&'; 
 			}
 
 			rtrim($fields_string, '&');
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch,CURLOPT_URL, self::LDAP_URL);
-			curl_setopt($ch,CURLOPT_POST, count($fields));
-			curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+			curl_setopt($ch, CURLOPT_URL, self::LDAP_URL);
+			curl_setopt($ch, CURLOPT_POST, count($fields));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
 
 			$result = curl_exec($ch);
 			curl_close($ch);
@@ -60,7 +60,8 @@ class PSUEmail {
 		for($i = 0; $i < count($matches); $i++) {
 			array_push($this->emails, array(
 				"name" => $name,
-				"email" => $matches[$i]['mail']));
+				"email" => $matches[$i]['mail']
+			));
 		}
 	}
 
